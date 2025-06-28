@@ -1,16 +1,24 @@
-CC   = gcc              # switch to clang if you prefer
-CFLAGS = -std=c17 -Wall -Wextra -O2 -g
-SRC = $(wildcard src/*.c)
-OBJ = $(SRC:.c=.o)
-TARGET = algods
+STRUCT ?= list
+CC = gcc
+CFLAGS = -std=c17 -Wall -Wextra -O2 -g -Iinclude
 
-$(TARGET): $(OBJ)
+SRC_DIR = src/$(STRUCT)
+SRC = $(wildcard $(SRC_DIR)/*.c)
+OBJ = $(SRC:.c=.o)
+
+BIN_DIR = bin
+TARGET = $(BIN_DIR)/$(STRUCT)
+
+# Default build target
+$(TARGET): $(OBJ) | $(BIN_DIR)
 	$(CC) $(CFLAGS) $(OBJ) -o $@
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+# Ensure bin directory exists
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
 
+# Clean up build artifacts
 clean:
-	rm -f $(OBJ) $(TARGET)
-.PHONY: clean
+	rm -rf $(OBJ) $(TARGET) $(BIN_DIR)
 
+.PHONY: clean

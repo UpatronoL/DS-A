@@ -1,3 +1,21 @@
-build/
+# Object files
 *.o
-algods
+
+# Binary output
+bin/
+build/
+
+# Core dumps (just in case)
+core
+*.core
+
+# Editor backups and system files
+*~
+*.swp
+.DS_Store
+
+# Logs
+*.log
+
+# Test binaries
+test_*
