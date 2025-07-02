@@ -1,21 +1,34 @@
-# Object files
+# Build object files
 *.o
 
-# Binary output
-bin/
-build/
+# Compiled binaries and build directories
+/bin/
+/build/
+/*.out
+*.exe
 
-# Core dumps (just in case)
+# macOS debug symbol folders
+*.dSYM/
+
+# Core dumps
 core
 *.core
 
-# Editor backups and system files
+# Editor temporary files
 *~
 *.swp
+*.swo
+
+# macOS metadata
 .DS_Store
 
-# Logs
+# Logs and other output
 *.log
 
-# Test binaries
+# Test binaries and outputs
 test_*
+*.jason
+/tests/*_test
+/tests/*.out
+
+compile_commands.json
