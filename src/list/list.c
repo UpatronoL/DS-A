@@ -217,3 +217,22 @@ List *list_duplicate(List *list) {
     return copy;
 }
 
+int *list_toArray(List *list) {
+    Node *cur = list->head;
+    int size = list_length(list) + 1;
+    int *array = malloc(size * sizeof(int));
+    int i = 0;
+    while(cur) {
+        array[i] = cur->data;
+        cur = cur->next;
+        i++;
+    }
+    return array;
+}
+
+List *array_toList(int *array) {
+    List *newList = list_new();
+    int size = sizeof(array) / sizeof(int);
+    for (int i = 0; i < size; i++) list_append(&list, array[i]);
+    return newList;
+}

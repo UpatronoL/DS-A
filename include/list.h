@@ -31,5 +31,7 @@ bool list_isEmpty(List *list);
 void list_clear(List **list);
 List *list_duplicate(List *list);
 void list_reverse(List **list);
+int *list_toArray(List *list);
+List *array_toList(int *array);
 
 #endif
