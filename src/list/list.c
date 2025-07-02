@@ -230,9 +230,10 @@ int *list_toArray(List *list) {
     return array;
 }
 
-List *array_toList(int *array) {
+List *array_toList(int array[], int size) {
     List *newList = list_new();
-    int size = sizeof(array) / sizeof(int);
-    for (int i = 0; i < size; i++) list_append(&list, array[i]);
+    for (int i = 0; i < size; i++) {
+        list_append(&newList, array[i]);
+    }
     return newList;
 }
