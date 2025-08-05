@@ -28,9 +28,9 @@ This repo is my from-scratch implementations of core data structures and algorit
 ## Progress board
 ### Done 
 - [x] Singly linked list
+- [x] Doubly linked list
 
 ### In progress
-- [ ] Doubly linked list
 - [ ] Dynamic array
 - [ ] Stack (array-backed)
 - [ ] Queue
