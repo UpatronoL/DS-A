@@ -1,6 +1,13 @@
 STRUCT ?= list
+SANITIZE ?= 1
+
 CC = gcc
-CFLAGS = -std=c17 -Wall -Wextra -O2 -g -fsanitize=address -fno-omit-frame-pointer -Iinclude
+SANITIZER_FLAGS = -fsanitize=address -fno-omit-frame-pointer
+ifeq ($(SANITIZE),0)
+    SANITIZER_FLAGS =
+endif
+
+CFLAGS = -Wall -Wextra -O2 -g $(SANITIZER_FLAGS) -Iinclude
 
 SRC_DIR = src/$(STRUCT)
 SRC = $(wildcard $(SRC_DIR)/*.c)
@@ -28,6 +35,8 @@ $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
 
 clean:
-	rm -rf $(OBJ) $(TARGET) $(TEST_BIN) $(BIN_DIR)
+	find src -name '*.o' -delete
+	rm -rf $(BIN_DIR)
 
 .PHONY: all test clean
+

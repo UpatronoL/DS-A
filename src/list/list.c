@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <stdbool.h>
 #include "list.h"
 
 Node *list_newNode(int data) {
@@ -39,57 +40,64 @@ void list_print(List *list) {
 }
 
 void list_push(List **list, int data) {
+    List *tempList = *list;
     Node *temp = list_newNode(data);
-    if (!(*list)->head) {
-        (*list)->head = temp;
-        (*list)->tail = temp;
+    if (!tempList->head) {
+        tempList->head = temp;
+        tempList->tail = temp;
     } else {
-        temp->next = (*list)->head;
-        (*list)->head = temp;
+        temp->next = tempList->head;
+        tempList->head = temp;
     }
 }
 
 void list_append(List **list, int data) {
+    List *tempList = *list;
     Node *temp = list_newNode(data);
-    if (!(*list)->head) {
-        (*list)->head = temp;
-        (*list)->tail = temp;
+    if (!tempList->head) {
+        tempList->head = temp;
+        tempList->tail = temp;
     } else {
-        (*list)->tail->next = temp;
-        (*list)->tail = temp;
+        tempList->tail->next = temp;
+        tempList->tail = temp;
     }
 }
 
 Node *list_pop(List **list) {
-    Node *temp = (*list)->head;
+    List *tempList = *list;
+    Node *temp = tempList->head;
     assert(temp);
-    (*list)->head = temp->next;
+    tempList->head = temp->next;
+    if (tempList->head == NULL)
+        tempList->tail = NULL;
     return temp;
 }
 
 Node *list_removeTail(List **list) {
-    Node *cur = (*list)->head;
+    List *tempList = *list;
+    Node *cur = tempList->head;
     if (!cur) return NULL;
 
-    if ((*list)->head == (*list)->tail) {
-        Node *temp = (*list)->head;
-        (*list)->head = NULL;
-        (*list)->tail = NULL;
+    if (tempList->head == tempList->tail) {
+        Node *temp = tempList->head;
+        tempList->head = NULL;
+        tempList->tail = NULL;
         return temp;
     }
 
-    while (cur->next != (*list)->tail) {
+    while (cur->next != tempList->tail) {
         cur = cur->next;
     }
 
-    Node *temp = (*list)->tail;
-    (*list)->tail = cur;
+    Node *temp = tempList->tail;
+    tempList->tail = cur;
     cur->next = NULL;
     return temp;
 }
 
 void list_insertAt(List **list, int pos, int data) {
-    int len = list_length(*list);
+    List *tempList = *list;
+    int len = list_length(tempList);
     if (pos < 0 || pos > len) {
         printf("Error: Position out of bounds\n");
         exit(-1);
@@ -102,7 +110,7 @@ void list_insertAt(List **list, int pos, int data) {
         list_append(list, data);
         return;
     }
-    Node *cur = (*list)->head;
+    Node *cur = tempList->head;
     for (int i = 1; i < pos; i++) {
         cur = cur->next;
     }
@@ -112,7 +120,8 @@ void list_insertAt(List **list, int pos, int data) {
 }
 
 void list_removeAt(List **list, int pos) {
-    int len = list_length(*list);
+    List *tempList = *list;
+    int len = list_length(tempList);
     if (pos < 0 || pos >= len) {
         printf("Error: Position out of bounds\n");
         exit(-1);
@@ -122,13 +131,13 @@ void list_removeAt(List **list, int pos) {
         free(temp);
         return;
     }
-    Node *cur = (*list)->head;
+    Node *cur = tempList->head;
     for (int i = 1; i < pos; i++) {
         cur = cur->next;
     }
     Node *temp = cur->next;
     cur->next = temp->next;
-    if (temp == (*list)->tail) (*list)->tail = cur;
+    if (temp == tempList->tail) tempList->tail = cur;
     free(temp);
 }
 
@@ -183,28 +192,30 @@ bool list_isEmpty(List *list) {
 }
 
 void list_clear(List **list) {
-    Node *cur = (*list)->head;
+    List *tempList = *list;
+    Node *cur = tempList->head;
     while (cur) {
         Node *next = cur->next;
         free(cur);
         cur = next;
     }
-    free(*list);
+    free(tempList);
     *list = NULL;
 }
 
 void list_reverse(List **list) {
+    List *tempList = *list;
     Node *prev = NULL;
-    Node *cur = (*list)->head;
+    Node *cur = tempList->head;
     Node *next = NULL;
-    (*list)->tail = (*list)->head;
+    tempList->tail = tempList->head;
     while (cur) {
         next = cur->next;
         cur->next = prev;
         prev = cur;
         cur = next;
     }
-    (*list)->head = prev;
+    tempList->head = prev;
 }
 
 List *list_duplicate(List *list) {
