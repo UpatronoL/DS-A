@@ -32,6 +32,7 @@ int dlist_length(DList *dlist);
 
 void dlist_reverse(DList **dlist);
 void dlist_clear(DList **dlist);
+void dlist_free(DList **dlist);
 DList *dlist_duplicate(DList *dlist);
 
 void dlist_print(DList *dlist);

@@ -65,7 +65,6 @@ void dlist_printReverse(DList *dlist) {
 }
 
 void dlist_push(DList **dlist, int data) {
-    if (dlist_isEmpty(*dlist)) exit(EXIT_FAILURE);
     DList *temp = *dlist;
     Node *node = dlist_newNode(data);
     node->next = temp->head;
@@ -79,7 +78,6 @@ void dlist_push(DList **dlist, int data) {
 }
 
 void dlist_append(DList **dlist, int data) {
-    if (dlist_isEmpty(*dlist)) exit(EXIT_FAILURE);
     DList *temp = *dlist;
     Node *node = dlist_newNode(data);
     node->prev = temp->tail;
@@ -173,7 +171,7 @@ void dlist_insertAt(DList **dlist, int index, int data) {
 }
 
 void dlist_removeAt(DList **dlist, int index) {
-     if (dlist_isEmpty(*dlist)) {
+    if (dlist_isEmpty(*dlist)) {
         printf("The list is empty\n");
         exit(-1);
     }
@@ -213,4 +211,186 @@ void dlist_removeAt(DList **dlist, int index) {
     cur->prev->next = cur->next;
     cur->next->prev = cur->prev;
     free(node);
+}
+
+int dlist_getAt(DList *dlist, int index) {
+    if (dlist_isEmpty(dlist)) {
+        printf("The list is empty\n");
+        exit(-1);
+    }
+
+    int len = dlist_length(dlist);
+    if (index < 0 || index > len) {
+        printf("Index out of bounds\n");
+        exit(-1);
+    }
+
+    if (index == 0) {
+        return dlist->head->data;
+    }
+
+    if (index == len) {
+        return dlist->head->data;
+    }
+
+    Node *cur;
+    int mid = len / 2;
+
+    if (index <= mid) {
+        cur = dlist->head;
+        for (int i = 0; i < index; i++) {
+            cur = cur->next;
+        }
+    } else {
+        cur = dlist->tail;
+        for (int i = len - 1; i > index; i--) {
+            cur = cur->prev;
+        }
+    }
+    return cur->data;
+}
+
+void dlist_setAt(DList *dlist, int index, int data) {
+    if (dlist_isEmpty(dlist)) {
+        printf("The list is empty\n");
+        exit(-1);
+    }
+
+    int len = dlist_length(dlist);
+    if (index < 0 || index > len) {
+        printf("Index out of bounds\n");
+        exit(-1);
+    }
+
+    if (index == 0) dlist->head->data = data;
+
+    if (index == len) dlist->head->data = data; 
+
+    Node *cur;
+    int mid = len / 2;
+
+    if (index <= mid) {
+        cur = dlist->head;
+        for (int i = 0; i < index; i++) {
+            cur = cur->next;
+        }
+    } else {
+        cur = dlist->tail;
+        for (int i = len - 1; i > index; i--) {
+            cur = cur->prev;
+        }
+    }
+     cur->data = data;
+}
+
+
+bool dlist_contains(DList *dlist, int data) {
+    if (dlist_isEmpty(dlist)) {
+        printf("The list is empty\n");
+        exit(-1);
+    }
+
+    Node *curH, *curT;
+
+    curH = dlist->head;
+    curT = dlist->tail;
+    
+    while (curH != curT) {
+        if(curH->data == data || curT->data == data) {
+            return true;
+        }
+        curH = curH->next;
+        curT = curT->prev;
+    }
+    return false;
+}
+
+int dlist_indexOf(DList *dlist, int data) {
+    if (dlist_isEmpty(dlist)) {
+        printf("The list is empty\n");
+        exit(-1);
+    }
+
+    int index;
+    Node *cur;
+
+    index = 0;
+    cur = dlist->head;
+    
+    while (cur) {
+        if(cur->data == data) {
+            return index;
+        }
+        cur = cur->next;
+        index++;
+    }
+    return -1;
+}
+
+DList *dlist_duplicate(DList *dlist) {
+    DList *temp = dlist_new();
+    Node *cur = dlist->head;
+    
+    while(cur) {
+        dlist_append(&temp, cur->data);
+        cur = cur->next;
+    }
+    return temp;
+}
+
+void dlist_reverse(DList **dlist) {
+    if (dlist_isEmpty(*dlist)) {
+        printf("The list is empty\n");
+        exit(-1);
+    }
+
+    if (dlist_length(*dlist) == 1) return;
+
+    DList *list = *dlist;
+    Node *cur = list->head;
+    Node *last = NULL, *temp = NULL;
+
+    while (cur != NULL) {
+        last = cur;
+        temp = cur->next;
+
+        cur->next = cur->prev;
+        cur->prev = temp;
+
+        cur = temp;
+    }
+
+    Node *old_head = list->head;
+    list->head = last;
+    list->tail = old_head;
+}
+
+void dlist_clear(DList **dlist) {
+    if (dlist_isEmpty(*dlist)) {
+        printf("The list is empty\n");
+        return;
+    }
+
+    DList *temp = *dlist;
+    Node *cur = temp->head;
+    while (cur) {
+        Node *next = cur->next;
+        free(cur);
+        cur = next;
+    }
+    temp->head = NULL;
+    temp->tail = NULL;
+}
+
+void dlist_free(DList **dlist) {
+    if (dlist_isEmpty(*dlist)) {
+        printf("The list is empty\n");
+        free(*dlist);
+        *dlist = NULL;
+        return;
+    }
+
+    dlist_clear(dlist);
+    free(*dlist);
+    *dlist = NULL;
 }

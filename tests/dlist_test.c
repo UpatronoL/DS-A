@@ -43,6 +43,7 @@ int main() {
     assert(dlist_indexOf(dlist, 3) != -1);
     assert(dlist_indexOf(dlist, 88) == -1);
 
+    dlist_print(dlist);
     dlist_reverse(&dlist);
     dlist_print(dlist);
 
@@ -52,6 +53,11 @@ int main() {
 
     dlist_clear(&dlist);
     dlist_clear(&copy);
+    assert(dlist);
+    assert(copy);
+
+    dlist_free(&dlist);
+    dlist_free(&copy);
     assert(!dlist);
     assert(!copy);
 
